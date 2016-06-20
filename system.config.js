@@ -21,6 +21,7 @@ System.config({
   },
 
   map: {
+    'templates': 'tmp/app/app.templates.js',
     'typescript': 'npm:typescript/lib/typescript.js',
     'angular': 'bower:angular/index.js',
     'angular-mocks': 'bower:angular-mocks/angular-mocks.js',

@@ -13,6 +13,7 @@ gulp.task('test', ['lint', 'ngTemplates'], function (done) {
     autoWatch: false
   }, done).start();
 });
+gulp.task('test:coverage', ['lint', 'testAndRemapJsCoverageToTs']);
 gulp.task('test:tdd', ['ngTemplates'], function (done) {
   process.env.generateCoverage = false;
   new Server({

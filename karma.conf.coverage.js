@@ -6,13 +6,16 @@
 'use strict';
 
 module.exports = function (config) {
-
   var pathsConf = require('./gulp/lib/config-factory.js')(require('./config.json'));
-  var COVERAGE_SRC_PATH = pathsConf.paths.coverageOutput + '/';
+  var COVERAGE_SRC_PATH = pathsConf.paths.testOutput  + '/coverage/';
+  // source files, that you wanna generate coverage for
+  // do not include tests or libraries
+  // (these files will be instrumented by Istanbul)
+  var filesToBeInstrumented = COVERAGE_SRC_PATH + 'app/**/!(*templates|*spec|*mock).js';
 
   var karmaDefaultConfig = {
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    autoWatch: false,
 
     // base path, that will be used to resolve files and exclude
     basePath: '.',
@@ -52,14 +55,13 @@ module.exports = function (config) {
     plugins: [
       'karma-systemjs',
       'karma-phantomjs-launcher',
-      'karma-chrome-launcher',
       'karma-jasmine',
       'karma-coverage'
     ],
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false,
+    singleRun: true,
 
     colors: true,
 
@@ -70,14 +72,8 @@ module.exports = function (config) {
     // coverage reporter generates the coverage
     reporters: ['progress', 'coverage'],
 
-    preprocessors: {
-      // source files, that you wanna generate coverage for
-      // do not include tests or libraries
-      // (these files will be instrumented by Istanbul)
-      'coverage/app/**/!(*templates|*spec).js': ['coverage']
-    },
-
     coverageReporter: {
+      dir: COVERAGE_SRC_PATH,
       reporters: [{
         type: 'json',
         subdir: '.',
@@ -85,26 +81,25 @@ module.exports = function (config) {
       }]
     },
 
-
     systemjs: {
       // Path to your SystemJS configuration file
       configFile: 'system.config.js',
       // SystemJS configuration specifically for tests, added after your config file.
       // Good for adding test libraries and mock modules
       config: {
+        transpiler: null, // we take JS files (already transpiled), so no transpiler needed
+        packages: {
+          'app': {
+            defaultExtension: 'js'
+          }
+        },
         paths: {
           'angular': 'bower:angular/angular.js',
           'tmp/*': COVERAGE_SRC_PATH + '*',
           'es6-module-loader': 'node_modules/es6-module-loader/dist/es6-module-loader.js',
           'systemjs': 'node_modules/systemjs/dist/system.js',
           'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.js',
-          'phantomjs-polyfill': 'node_modules/phantomjs-polyfill/bind-polyfill.js',
-          'typescript': 'node_modules/typescript/lib/typescript.js'
-        },
-        meta: {
-          'bower:angular/angular.js': {
-            format: 'global'
-          }
+          'phantomjs-polyfill': 'node_modules/phantomjs-polyfill/bind-polyfill.js'
         }
       },
 
@@ -113,8 +108,10 @@ module.exports = function (config) {
         'bower_components/**/*', COVERAGE_SRC_PATH + 'app/**/*'
       ]
     }
-
-
   };
+
+  karmaDefaultConfig.preprocessors = {};
+  karmaDefaultConfig.preprocessors[filesToBeInstrumented] = ['coverage'];
+
   config.set(karmaDefaultConfig);
 };

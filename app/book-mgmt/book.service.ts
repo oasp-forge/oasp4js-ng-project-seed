@@ -1,5 +1,5 @@
 export default class BookService {
-  private books:[any] = [];
+  private books:any[] = [];
   private sequencer:number = 1;
 
   findOne(id:number):any {
