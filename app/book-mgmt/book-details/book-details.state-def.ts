@@ -8,6 +8,7 @@ export default function addBookDetailsStateDef($stateProvider:ng.ui.IStateProvid
     controller: 'BookDetailsCtrl',
     controllerAs: 'bookDetailsCtrl',
     resolve: {
+      /* @ngInject */
       currentBook: function ($stateParams:ng.ui.IStateParamsService, $location:ng.ILocationService,
                              bookService:BookService) {
         let bookIdParamValue:string = $stateParams[bookIdParamName];

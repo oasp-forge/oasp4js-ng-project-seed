@@ -6,6 +6,7 @@ export default function addBookOverviewStateDef($stateProvider:ng.ui.IStateProvi
     controller: 'BookOverviewCtrl',
     controllerAs: 'bookOverviewCtrl',
     resolve: {
+      /* @ngInject */
       currentBooks: function (bookService:BookService) {
         return bookService.findAll();
       }

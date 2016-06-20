@@ -1,4 +1,5 @@
 export default class BookOverviewCtrl {
+  /* @ngInject */
   constructor(private currentBooks:any) {
   }
 
