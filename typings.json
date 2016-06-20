@@ -1,0 +1,10 @@
+{
+  "name": "app",
+  "dependencies": {},
+  "globalDependencies": {
+    "angular": "registry:dt/angular#1.5.0+20160614091201",
+    "angular-mocks": "registry:dt/angular-mocks#1.5.0+20160608104721",
+    "angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160521151413",
+    "jquery": "registry:dt/jquery#1.10.0+20160417213236"
+  }
+}

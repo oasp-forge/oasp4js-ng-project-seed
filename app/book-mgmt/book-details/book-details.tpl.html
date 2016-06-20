@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<section class="book-details container-fluid">
+  <form name="bookDetailsCtrl.bookForm" novalidate>
+    <div class="row">
+      <div class="col-md-1 col-sm-3 col-xs-4 form-label">
+        <label for="title">Title:</label>
+      </div>
+      <div class="col-md-3 col-sm-5 col-xs-6">
+        <input id="title" name="titleField" type="text" data-ng-model="bookDetailsCtrl.currentBook.title" data-ng-required="true" data-ng-maxlength="50">
+        <span class="error-msg" data-ng-bind="bookDetailsCtrl.getErrorMessageOfField(bookDetailsCtrl.bookForm.titleField)"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-1 col-sm-3 col-xs-4 form-label">
+        <label for="author">Author:</label>
+      </div>
+      <div class="col-md-3 col-sm-5 col-xs-6">
+        <input id="author" name="authorField" type="text" data-ng-model="bookDetailsCtrl.currentBook.author" data-ng-required="true" data-ng-maxlength="15">
+        <span class="error-msg" data-ng-bind="bookDetailsCtrl.getErrorMessageOfField(bookDetailsCtrl.bookForm.authorField)"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-1 col-sm-3 col-xs-4">
+      </div>
+      <div class="col-md-3 col-sm-5 col-xs-6">
+        <button type="submit" class="btn btn-primary" data-ng-click="bookDetailsCtrl.save()">Save</button>
+      </div>
+    </div>
+  </form>
+</section>
+</body>
+</html>

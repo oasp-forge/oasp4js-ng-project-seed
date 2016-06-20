@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BookApp</title>
+  <!-- build:css css/app.css -->
+  <link rel="stylesheet" href="css/app.css">
+  <!-- endbuild -->
+</head>
+<body data-ng-app="app" class="app">
+<app-nav></app-nav>
+<section data-ui-view>
+</section>
+
+
+<!-- process:remove:prod -->
+<script src="../node_modules/systemjs/dist/system.js"></script>
+<script src="../system.config.js"></script>
+<script>
+  System.import('app/app.module.ts');
+</script>
+<!-- /process -->
+
+<!-- build:js app/app.module.js-->
+<!-- process:remove:dev -->
+<script src="app/app.module.js"></script>
+<!-- /process -->
+<!-- endbuild -->
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<section class="container-fluid">
+  <section data-ng-hide="bookOverviewCtrl.thereAreBooksToDisplay()">
+    <p>No books available. <a href data-ui-sref="book-details">Add a new one</a>.</p>
+  </section>
+  <section data-ng-show="bookOverviewCtrl.thereAreBooksToDisplay()">
+    <table class="table table-striped">
+      <tbody>
+      <tr>
+        <th>Author</th>
+        <th>Title</th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr data-ng-repeat="book in bookOverviewCtrl.currentBooks">
+        <td data-ng-bind="book.author"></td>
+        <td data-ng-bind="book.title"></td>
+        <td><a ui-sref="book-details({bookId: book.id})">Details</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</section>
+</body>
+</html>
