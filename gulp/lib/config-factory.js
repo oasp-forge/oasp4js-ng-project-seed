@@ -12,7 +12,7 @@ var configFactory = function (externalConfig) {
     return isBuildForProd() ? externalConfig.paths.dist : externalConfig.paths.tmp;
   };
 
-  
+
   return {
     paths: externalConfig.paths,
 
@@ -71,18 +71,24 @@ var configFactory = function (externalConfig) {
     },
 
     scripts: {
+      all: function () {
+        return pathsBuilder.build('{src}/**/*.ts')
+      },
       src: function () {
-        return pathsBuilder.build('{src}/*.module.ts');
+        return _.flatten([
+          pathsBuilder.build('{src}/**/*.ts'),
+          pathsBuilder.build('!{src}/**/*.spec.ts')
+        ]);
       },
       testSrc: function () {
         return _.flatten([
           //load main spec to guarantee angular-mock loading
-          pathsBuilder.build('{testSrc}/app.spec.ts'),
-          pathsBuilder.build('{src}/*.module.ts'),
-          pathsBuilder.build('{testSrc}/*.mock.ts'),
-          pathsBuilder.build('{testSrc}/**/*.mock.ts'),
-          pathsBuilder.build('{testSrc}/*.spec.ts'),
-          pathsBuilder.build('{testSrc}/**/*.spec.ts')
+          pathsBuilder.build('{testSrc}/app.spec.js'),
+          pathsBuilder.build('{testSrc}/*.module.js'),
+          pathsBuilder.build('{testSrc}/*.mock.js'),
+          pathsBuilder.build('{testSrc}/**/*.mock.js'),
+          pathsBuilder.build('{testSrc}/*.spec.js'),
+          pathsBuilder.build('{testSrc}/**/*.spec.js')
         ]);
       },
       lintSrc: function () {
