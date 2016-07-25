@@ -36,13 +36,16 @@ gulp.task('copyTemplatesForCoverage', ['copySourcesForCoverage'], function () {
 });
 
 gulp.task('transpileForCoverage', ['copyTemplatesForCoverage'], function () {
-  var tsResult = gulp.src('app/**/*.ts', {base: 'app'})
-    .pipe(sourcemaps.init()) // This means sourcemaps will be generated
-    .pipe(ts(tsProject));
+  var result = gulp.src(config.scripts.all(), {base: 'app'});
 
-  return tsResult.js
-    .pipe(sourcemaps.write({includeContent: false, sourceRoot: ''})) // Now the sourcemaps are added to the .js file
-    .pipe(gulp.dest(COVERAGE_SRC_PATH + 'app'));
+  // do the transpilation in case typescript is used
+  result = result
+    .pipe(sourcemaps.init())
+    .pipe(ts(tsProject)).js
+    .pipe(sourcemaps.write({includeContent: false, sourceRoot: ''}));
+
+  // copy js sources
+  return result.pipe(gulp.dest(COVERAGE_SRC_PATH + 'app'));
 });
 
 gulp.task('test:jsCoverage', ['transpileForCoverage'], function (done) {

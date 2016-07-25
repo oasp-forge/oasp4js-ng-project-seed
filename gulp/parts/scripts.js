@@ -1,29 +1,54 @@
 /*global config, isBuildForProd */
 'use strict';
 var gulp = require('gulp'),
-    gulp_ngAnnotate = require('gulp-ng-annotate'),
-    gulp_uglify = require('gulp-uglify'),
-    gulp_file = require('gulp-file'),
-    gulp_callback = require('gulp-callback'),
-    Builder = require('systemjs-builder');
+  gulp_ngAnnotate = require('gulp-ng-annotate'),
+  gulp_uglify = require('gulp-uglify'),
+  gulp_file = require('gulp-file'),
+  gulp_callback = require('gulp-callback'),
+  Builder = require('systemjs-builder'),
 
-gulp.task('scripts', ['ngTemplates'], function (done) {
+  currentTsTranspiler = require('typescript'),
+  ts = require('gulp-typescript'),
+  sourcemaps = require('gulp-sourcemaps'),
+
+  tsProject = ts.createProject({
+    noExternalResolve: false,
+    sortOutput: true,
+    typescript: currentTsTranspiler
+  });
+
+gulp.task('copyAndTranspileScripts', ['ngTemplates'], function (done) {
+  var result = gulp.src(config.scripts.src(), {base: 'app'});
+
+  // do the transpilation in case typescript is used
+  result = result
+    .pipe(sourcemaps.init())
+    .pipe(ts(tsProject)).js
+    .pipe(sourcemaps.write({includeContent: false, sourceRoot: '/app'}));
+
+  // copy js sources
+  return result.pipe(gulp.dest('./.tmp/app'));
+});
+
+gulp.task('scripts', ['copyAndTranspileScripts'], function (done) {
+
   if (isBuildForProd()) {
-    var builder = new Builder('./', './system.config.js');
-    //output.source;    // generated bundle source
-    //output.sourceMap; // generated bundle source map
-    //output.modules;   // array of module names defined in the bundle
-    builder.buildStatic('app/app.module.ts').then(function (output) {
-      gulp_file('app/app.module.js', output.source)
-        .pipe(gulp_ngAnnotate())
-        .pipe(gulp_uglify())
-        .pipe(gulp.dest(config.paths.tmp))
-        .pipe(gulp_callback(done));
-    }, function (ex) {
-      done(new Error(ex));
-    });
-  }
-  else {
+    var systemBuilder = new Builder('./', './system.config.js');
+
+    // bundle scripts
+    systemBuilder.buildStatic('.tmp/app/app.module.js', '.tmp/app/app.module.js')
+      .then(function () {
+        gulp.src('.tmp/app/app.module.js', {base: './'})
+          .pipe(gulp_ngAnnotate())
+          .pipe(gulp_uglify())
+          .pipe(gulp.dest('.'));
+
+        done();
+      })
+      .catch(function (err) {
+        done(new Error(err));
+      });
+  } else {
     done();
   }
 });

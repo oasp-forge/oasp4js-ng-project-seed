@@ -3,7 +3,7 @@
     "tmp": ".tmp",
     "dist": "dist",
     "src": "app",
-    "testSrc": "app",
+    "testSrc": ".tmp/app",
     "testOutput": "test-output",
     "coverageOutput": "coverage"
   },

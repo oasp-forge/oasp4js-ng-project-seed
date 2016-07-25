@@ -72,11 +72,10 @@ module.exports = function (config) {
         paths: {
           'angular': 'bower:angular/angular.js',
           'tmp/*': '.tmp/*',
-          'es6-module-loader': 'node_modules/es6-module-loader/dist/es6-module-loader.js',
-          'systemjs': 'node_modules/systemjs/dist/system.js',
-          'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.js',
-          'phantomjs-polyfill': 'node_modules/phantomjs-polyfill/bind-polyfill.js',
-          'typescript': 'node_modules/typescript/lib/typescript.js'
+          'es6-module-loader': 'node_modules/es6-module-loader/dist/es6-module-loader.src.js',
+          'systemjs': 'node_modules/systemjs/dist/system.src.js',
+          'system-polyfills': 'node_modules/systemjs/dist/system-polyfills.src.js',
+          'phantomjs-polyfill': 'node_modules/phantomjs-polyfill/bind-polyfill.js'
         },
         meta: {
           'bower:angular/angular.js': {
@@ -86,9 +85,7 @@ module.exports = function (config) {
       },
 
       // Patterns for files that you want Karma to make available, but not loaded until a module requests them. eg. Third-party libraries.
-      serveFiles: [
-        'bower_components/**/*', pathsConf.paths.src + '/**/*', pathsConf.paths.tmp + '/**/*'
-      ]
+      serveFiles: ['bower_components/**/*', pathsConf.paths.tmp + '/**/*']
     }
   };
   config.set(karmaDefaultConfig);
