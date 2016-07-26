@@ -1,19 +1,37 @@
 'use strict';
 
-module.exports = (gulp, plugins) => () => {
-  var tsProject = ts.createProject({
-      noExternalResolve: false,
-      sortOutput: true,
-      typescript: plugins.currentTsTranspiler
-    }),
-    result = gulp.src(config.scripts.src(), {base: 'app'});
+var ts = require('gulp-typescript'),
+  sourceMaps = require('gulp-sourcemaps'),
+  currentTsTranspiler = require('typescript');
 
-  // do the transpilation in case typescript is used
-  result = result
-    .pipe(plugins.sourcemaps.init())
-    .pipe(plugins.ts(tsProject)).js
-    .pipe(plugins.sourcemaps.write({includeContent: false, sourceRoot: '/app'}));
+module.exports = function(gulp, config) {
 
-  // copy js sources
-  return result.pipe(gulp.dest('./.tmp/app'));
+  return function (sourcePath, destPath, shouldTranspile, sourceMapsOptions) {
+
+    return function () {
+
+      var tsProject = ts.createProject({
+          noExternalResolve: false,
+          sortOutput: true,
+          typescript: currentTsTranspiler
+        }),
+
+        result;
+
+      sourceMapsOptions = sourceMapsOptions || {includeContent: true};
+
+      result = gulp.src(sourcePath, {base: 'app'});
+
+      // do the transpilation in case typescript is used
+      if (shouldTranspile) {
+        result = result
+          .pipe(sourceMaps.init())
+          .pipe(ts(tsProject)).js
+          .pipe(sourceMaps.write(sourceMapsOptions));
+      }
+
+      // copy js sources
+      return result.pipe(gulp.dest(destPath));
+    }
+  }
 };

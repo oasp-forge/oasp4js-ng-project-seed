@@ -2,20 +2,12 @@
 'use strict';
 var
   gulp = require('gulp'),
-  currentTsTranspiler = require('typescript'),
-  ts = require('gulp-typescript'),
   gulp_copy = require('gulp-copy'),
-  sourcemaps = require('gulp-sourcemaps'),
   del = require('del'),
   Server = require('karma').Server,
   remapIstanbul = require('remap-istanbul/lib/gulpRemapIstanbul'),
 
-  tsProject = ts.createProject({
-    declaration: false,
-    noExternalResolve: false,
-    sortOutput: true,
-    typescript: currentTsTranspiler
-  }),
+  copyAndTranspileScripts = require('./tasks/copy-and-transpile-scripts')(gulp, config),
 
   COVERAGE_SRC_PATH = config.paths.testOutput + '/coverage/';
 
@@ -35,18 +27,7 @@ gulp.task('copyTemplatesForCoverage', ['copySourcesForCoverage'], function () {
     .pipe(gulp_copy(COVERAGE_SRC_PATH, {prefix: 1}));
 });
 
-gulp.task('transpileForCoverage', ['copyTemplatesForCoverage'], function () {
-  var result = gulp.src(config.scripts.all(), {base: 'app'});
-
-  // do the transpilation in case typescript is used
-  result = result
-    .pipe(sourcemaps.init())
-    .pipe(ts(tsProject)).js
-    .pipe(sourcemaps.write({includeContent: false, sourceRoot: ''}));
-
-  // copy js sources
-  return result.pipe(gulp.dest(COVERAGE_SRC_PATH + 'app'));
-});
+gulp.task('transpileForCoverage', ['copyTemplatesForCoverage'], copyAndTranspileScripts(config.scripts.all(), COVERAGE_SRC_PATH + 'app', true));
 
 gulp.task('test:jsCoverage', ['transpileForCoverage'], function (done) {
   process.env.generateCoverage = true;

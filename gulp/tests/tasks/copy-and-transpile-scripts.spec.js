@@ -1,16 +1,15 @@
 'use strict';
 
 var gulp = require("gulp"),
-  plugins = require("gulp-load-plugins")(),
-  config = require('./../../gulp/lib/config-factory.js')(require('./../../config.json')),
+  config = require('./../../lib/config-factory.js')(require('./../../../config.json')),
   assert = require('yeoman-assert'),
   recursiveReadDir = require('recursive-readdir-sync'),
   _ = require('lodash'),
   path = require('path'),
 
   /* GULP TASKS */
-  copyAndTranspileScripts = require("./../../gulp/tasks/copy-and-transpile-scripts")(gulp, plugins, config),
-  clean = require("./../../gulp/tasks/clean")(gulp, plugins, config);
+  copyAndTranspileScripts = require("./../../tasks/copy-and-transpile-scripts")(gulp, config),
+  clean = require("./../../tasks/clean")(gulp, config);
 
 describe("test:tasks:copyAndTranspileScripts", function () {
 

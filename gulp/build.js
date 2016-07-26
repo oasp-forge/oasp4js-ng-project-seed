@@ -32,6 +32,4 @@ gulp.task('build:dist', ['env:prod', 'build']);
 
 gulp.task('build', ['indexHtml', 'scripts', 'styles', 'img', 'fonts', 'i18n', 'html']);
 
-gulp.task('clean', function (done) {
-  return del(config.outputs(), done);
-});
+gulp.task('clean', require('./tasks/clean')(gulp, config));
