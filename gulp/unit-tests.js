@@ -5,32 +5,9 @@ var gulp = require('gulp'),
     gulp_tslint = require('gulp-tslint'),
     Server = require('karma').Server,
 
-    currentTsTranspiler = require('typescript'),
-    ts = require('gulp-typescript'),
-    sourcemaps = require('gulp-sourcemaps'),
+    copyAndTranspileScripts = require('./tasks/copy-and-transpile-scripts')(gulp, config);
 
-    tsProject = ts.createProject({
-      noExternalResolve: false,
-      sortOutput: true,
-      typescript: currentTsTranspiler
-    });
-
-function copyAndTranspileSources(sourcePath) {
-  var result = gulp.src(sourcePath, {base: 'app'});
-
-  // do the transpilation in case typescript is used
-  result = result
-    .pipe(sourcemaps.init())
-    .pipe(ts(tsProject)).js
-    .pipe(sourcemaps.write({includeContent: true}));
-
-  // copy js sources
-  return result.pipe(gulp.dest('./.tmp/app'));
-}
-
-gulp.task('copyAndTranspileForTests', ['ngTemplates'], function () {
-  return copyAndTranspileSources(config.scripts.all());
-});
+gulp.task('copyAndTranspileForTests', ['ngTemplates'], copyAndTranspileScripts(config.scripts.all(), ".tmp/app", true));
 
 gulp.task('test', ['lint', 'copyAndTranspileForTests'], function (done) {
   process.env.generateCoverage = false;
@@ -47,7 +24,7 @@ gulp.task('test:tdd', ['copyAndTranspileForTests'], function (done) {
   process.env.generateCoverage = false;
 
   gulp.watch(config.scripts.all(), function (vinyl) {
-    copyAndTranspileSources(vinyl.path);
+    copyAndTranspileScripts(vinyl.path, "./.tmp/app", true)();
   });
 
   new Server({
@@ -61,7 +38,7 @@ gulp.task('test:tdd:debug', ['copyAndTranspileForTests'], function (done) {
   process.env.generateCoverage = false;
 
   gulp.watch(config.scripts.all(), function (vinyl) {
-    copyAndTranspileSources(vinyl.path);
+    copyAndTranspileScripts(vinyl.path, "./.tmp/app", true)();
   });
 
   new Server({
